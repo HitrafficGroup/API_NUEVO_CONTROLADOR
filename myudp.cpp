@@ -535,7 +535,7 @@ void MyUDP::readPending(){
             msgerror = Unsupport_OB;
         }
     }
-    else if(gbmsg->DataLinkCode == DL_Com)
+    else if(gbmsg->DataLinkCode == DL_Com)// esta  condicional nos devuelve las ips que estan disponibles para ello envia una trama broadcast
     {
         if(gbmsg->ObjectCode == O_Call && gbmsg->OperationType == OT_QueryAnswer)
         {
@@ -561,6 +561,51 @@ void MyUDP::readPending(){
 
             qDebug()<<tr("search success");
         }
+    }
+    else if(gbmsg->DataLinkCode == DL_CharacPar)
+    {
+
+
+        if(gbmsg->ObjectCode == O_Schedule)//Programación de operaciones de programación
+               {
+                   if(gbmsg->OperationType == OT_QueryAnswer)//respuesta de consulta
+                   {
+                       //búsqueda exitosa
+                       quint8 ScheduleSize = 9;
+                       for(quint16 i = 0; i < 5; i++)
+                           {
+                               quint16 readpoint = ScheduleSize * i + 1;
+                               int number = rx_var[readpoint];
+                               int month = rx_var[readpoint+1] | (rx_var[readpoint+2]<<8);
+                               int day = rx_var[readpoint+3];
+                               int date =  (quint32)rx_var[readpoint+4] | \
+                                                              ((quint32)rx_var[readpoint+5]<<8) | \
+                                                              ((quint32)rx_var[readpoint+6]<<16) | \
+                                                              ((quint32)rx_var[readpoint+7]<<24);
+                              int DayPlan = rx_var[readpoint+8];
+                               qDebug()<<"Number: "<<number;
+                               qDebug()<<"semana: "<<month;
+                               qDebug()<<"dia: "<<day;
+                               qDebug()<<"fecha: "<<date;
+
+
+                           }
+                           //ReadFalg |= SchedulePar;
+                           //tableScheduleShowData();
+                           //statusMsg = tr("Leer el plan de programación con éxito");
+                           qDebug()<<tr("read Schedule success");
+                       }
+                   }
+                   else if(gbmsg->OperationType == OT_SetAnswer)//establecer respuesta
+                   {
+                      // WriteFalg |= SchedulePar;
+                       statusMsg = "Leer el plan de programación con éxito";
+                       qDebug()<<tr("set Schedule success");
+                   }
+                   else{//Tipo de operación no compatible
+                       msgerror = Unsupport_OT;
+               }
+        //desde aqui debemos agregar el codigo encargado de traernos las configuraciones del controlador
     }
     //termina la funcion
 }

@@ -22,9 +22,10 @@ int main(int argc, char *argv[])
     }
 */
 
-    client.HelloUDP();
+    //client.HelloUDP();
     //client.ReadData(O_CurrentTime);
     //client.ReadData(O_BasicInfo);
-    //socket.ReadData(O_DeviceInfo);
+    //client.ReadData(O_DeviceInfo);
+    client.ReadData(O_Schedule);
     return a.exec();
 }
