@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 3.2.1, 2023-05-05T11:32:03. -->
+<!-- Written by QtCreator 3.2.1, 2023-05-05T15:36:47. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -225,7 +225,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">API_NUEVO_CONTROLADOR_V4</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:C:/Users/Belisario_Ochoa/OneDrive - Hitraffic Technology/Escritorio/CENTRALIZACION/API_NUEVO_CONTROLADOR_V4/API_NUEVO_CONTROLADOR_V4.pro</value>
-    <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.CommandLineArguments">192.168.1.122 --get_fases</value>
+    <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.CommandLineArguments">192.168.1.122 --get_tiempo</value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.ProFile">API_NUEVO_CONTROLADOR_V4.pro</value>
     <value type="bool" key="Qt4ProjectManager.Qt4RunConfiguration.UseDyldImageSuffix">false</value>
     <value type="bool" key="Qt4ProjectManager.Qt4RunConfiguration.UseTerminal">true</value>

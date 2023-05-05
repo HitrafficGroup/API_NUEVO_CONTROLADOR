@@ -360,111 +360,207 @@ void MyUDP::readPending(){
                 msgerror = Unsupport_OT;
         }
         else if (gbmsg->ObjectCode == O_WorkState)
-              {
-                  if (gbmsg->OperationType == OT_QueryAnswer) // respuesta de consulta de estado
-                  {
+        {
+            if (gbmsg->OperationType == OT_QueryAnswer) // respuesta de consulta de estado
+            {
 
-                      qDebug() << tr("read WorkState success");
-                  }
-                  else if (gbmsg->OperationType == OT_InitiativeReport) // respuesta de consulta de estado
-                  {
+                qDebug() << tr("read WorkState success");
+            }
+            else if (gbmsg->OperationType == OT_InitiativeReport) // respuesta de consulta de estado
+            {
 
-                      qDebug()<<tr("WorkState Report success");
-                  }
-                  // éxito de estado de consulta
-                  if (rx_num == 39)
-                  {
-                      //WorkState(rx_var);
-                  }
-              }
+                qDebug()<<tr("WorkState Report success");
+            }
+            // éxito de estado de consulta
+            if (rx_num == 39)
+            {
+                //WorkState(rx_var);
+            }
+        }
         else if (gbmsg->ObjectCode == O_DeviceInfo)
+        {
+            if (gbmsg->OperationType == OT_QueryAnswer) // Respuesta de información del dispositivo de consulta
+            {
+                quint16 StrLen = 0;
+                quint16 temp[64];
+                for (quint16 i = 0; i < 128;)
                 {
-                    if (gbmsg->OperationType == OT_QueryAnswer) // Respuesta de información del dispositivo de consulta
+                    if (rx_var[i] != 0x00 || rx_var[i + 1] != 0x00)
                     {
-                        quint16 StrLen = 0;
-                        quint16 temp[64];
-                        for (quint16 i = 0; i < 128;)
-                        {
-                            if (rx_var[i] != 0x00 || rx_var[i + 1] != 0x00)
-                            {
-                                temp[StrLen++] = (rx_var[i] << 8) | rx_var[i + 1];
-                                i += 2;
-                            }
-                            else
-                                break;
-                        }
-
-                        QString manufacturerInfoStr;
-                        manufacturerInfoStr.resize(StrLen);
-                        for (quint16 i = 0; i < StrLen; i++)
-                        {
-                            manufacturerInfoStr[i] = QChar(temp[i]);
-                        }
-
-
-                        qDebug() << manufacturerInfoStr;
-
-
-                        memcpy(deviceInfoBuf, &rx_var[128], 48);
-                        QByteArray deviceversion;
-                        deviceversion.resize(4);
-
-                        for (quint8 i = 0; i < 4; i++)
-                        {
-                            deviceversion[i] = rx_var[128 + i];
-                        }
-                        deviceversion = deviceversion.toHex();
-                        qDebug() << deviceversion;
-                        QByteArray deviceNumber;
-                        deviceNumber.resize(16);
-                        for (quint8 i = 0; i < 16; i++)
-                        {
-                            deviceNumber[i] = rx_var[132 + i];
-                        }
-                        deviceNumber = deviceNumber.toHex();
-                        quint8 StrNum = deviceNumber.count();
-                        while (StrNum > 0)
-                        {
-                            if (deviceNumber.at(0) == '0')
-                                deviceNumber.remove(0, 1);
-                            else
-                                break;
-                            StrNum = deviceNumber.count();
-                        }
-
-
-                        qDebug() << deviceNumber;
-                        QByteArray productionDate;
-                        productionDate.resize(6);
-                        for (quint8 i = 0; i < 6; i++)
-                        {
-                            productionDate[i] = rx_var[148 + i];
-                        }
-                        productionDate = productionDate.toHex();
-
-                        qDebug() << productionDate;
-                        QByteArray configurationDate;
-                        configurationDate.resize(6);
-                        for (quint8 i = 0; i < 6; i++)
-                        {
-                            configurationDate[i] = rx_var[154 + i];
-                        }
-                        configurationDate = configurationDate.toHex();
-
-                        qDebug() << configurationDate;
-                        //ReadFalg |= DevicePar; nose que hace esta linea
-
-                        qDebug() << tr("read DeviceInfo success");
-                    }
-                    else if (gbmsg->OperationType == OT_SetAnswer) // establecer tiempo de respuesta
-                    {
-
-
-                        qDebug() << tr("set DeviceInfo success");
+                        temp[StrLen++] = (rx_var[i] << 8) | rx_var[i + 1];
+                        i += 2;
                     }
                     else
-                        qDebug() << tr("Error");
+                        break;
                 }
+
+                QString manufacturerInfoStr;
+                manufacturerInfoStr.resize(StrLen);
+                for (quint16 i = 0; i < StrLen; i++)
+                {
+                    manufacturerInfoStr[i] = QChar(temp[i]);
+                }
+
+
+                qDebug() << manufacturerInfoStr;
+
+
+                memcpy(deviceInfoBuf, &rx_var[128], 48);
+                QByteArray deviceversion;
+                deviceversion.resize(4);
+
+                for (quint8 i = 0; i < 4; i++)
+                {
+                    deviceversion[i] = rx_var[128 + i];
+                }
+                deviceversion = deviceversion.toHex();
+                qDebug() << deviceversion;
+                QByteArray deviceNumber;
+                deviceNumber.resize(16);
+                for (quint8 i = 0; i < 16; i++)
+                {
+                    deviceNumber[i] = rx_var[132 + i];
+                }
+                deviceNumber = deviceNumber.toHex();
+                quint8 StrNum = deviceNumber.count();
+                while (StrNum > 0)
+                {
+                    if (deviceNumber.at(0) == '0')
+                        deviceNumber.remove(0, 1);
+                    else
+                        break;
+                    StrNum = deviceNumber.count();
+                }
+
+
+                qDebug() << deviceNumber;
+                QByteArray productionDate;
+                productionDate.resize(6);
+                for (quint8 i = 0; i < 6; i++)
+                {
+                    productionDate[i] = rx_var[148 + i];
+                }
+                productionDate = productionDate.toHex();
+
+                qDebug() << productionDate;
+                QByteArray configurationDate;
+                configurationDate.resize(6);
+                for (quint8 i = 0; i < 6; i++)
+                {
+                    configurationDate[i] = rx_var[154 + i];
+                }
+                configurationDate = configurationDate.toHex();
+
+                qDebug() << configurationDate;
+                //ReadFalg |= DevicePar; nose que hace esta linea
+
+                qDebug() << tr("read DeviceInfo success");
+            }
+            else if (gbmsg->OperationType == OT_SetAnswer) // establecer tiempo de respuesta
+            {
+
+
+                qDebug() << tr("set DeviceInfo success");
+            }
+            else
+                qDebug() << tr("Error");
+        }
+        else if(gbmsg->ObjectCode == O_BasicInfo)
+        {
+            if(gbmsg->OperationType == OT_QueryAnswer)//Respuesta de información del dispositivo de consulta
+            {
+                quint16 StrLen = 0;
+                quint16 temp[64];
+                for(quint16 i=0;i<128;)
+                {
+                    if(rx_var[i] != 0x00 || rx_var[i+1] != 0x00)
+                    {
+                        temp[StrLen++] = (rx_var[i]<<8)|rx_var[i+1];
+                        i += 2;
+                    }
+                    else break;
+                }
+
+                QString InterInfoStr;
+                InterInfoStr.resize(StrLen);
+                for(quint16 i=0; i<StrLen; i++)
+                {
+                    InterInfoStr[i] = QChar(temp[i]);
+                }
+
+                for(int i=0;i<6;i++) mac[i] = rx_var[142+i];
+                QByteArray mac_addr;
+                mac_addr.resize(6);
+                mac_addr[0] = rx_var[142];
+                mac_addr[1] = rx_var[143];
+                mac_addr[2] = rx_var[144];
+                mac_addr[3] = rx_var[145];
+                mac_addr[4] = rx_var[146];
+                mac_addr[5] = rx_var[147];
+                mac_addr = mac_addr.toHex();
+                mac_addr.insert(10,":");
+                mac_addr.insert(8,":");
+                mac_addr.insert(6,":");
+                mac_addr.insert(4,":");
+                mac_addr.insert(2,":");
+                qDebug()<<"la mac: "<<mac_addr;
+                QString ip_target = tr("%1.%2.%3.%4").arg(rx_var[148]).arg(rx_var[149]).arg(rx_var[150]).arg(rx_var[151]);
+                qDebug()<<"la Ip server: "<<ip_target;
+
+                // ui->lineEdit_ServerIP->setText(tr("%1.%2.%3.%4").arg(rx_var[148]).arg(rx_var[149]).arg(rx_var[150]).arg(rx_var[151]));
+                //ui->lineEdit_ServerPort->setText(tr("%1").arg((rx_var[152]<<8)|rx_var[153]));
+                QString port_target = tr("%1").arg((rx_var[152]<<8)|rx_var[153]);
+                qDebug()<<"El puerto: "<<port_target;
+
+                double TimeZone = ((rx_var[156]<<16)|(rx_var[157]<<8)|rx_var[158])/3600.0;
+                qDebug()<<"Time Zone: "<<TimeZone;
+                if(rx_var[155]==0) TimeZone = TimeZone*(-1);
+
+
+                quint32 TscNum = (rx_var[159]<<24)|(rx_var[160]<<16)|(rx_var[161]<<8)|rx_var[162];
+
+                qDebug()<<tr("read BasicInfo success");
+            }
+            else if(gbmsg->OperationType == OT_SetAnswer)
+            {
+                //WriteFalg |= TimePar;
+
+                qDebug()<<tr("set BasicInfo success");
+            }
+            else
+                msgerror = Unsupport_OT;
+        }
+        else
+        {
+            msgerror = Unsupport_OB;
+        }
+    }
+    else if(gbmsg->DataLinkCode == DL_Com)
+    {
+        if(gbmsg->ObjectCode == O_Call && gbmsg->OperationType == OT_QueryAnswer)
+        {
+            QByteArray string;
+            string.resize(4);
+            for(quint8 i=0;i<4;i++) string[i] = rx_var[i];
+            string = string.toHex();
+            qDebug()<<"Version: "<<string;
+            string.resize(2);
+            for(quint8 i=0;i<2;i++) string[i] = rx_var[5 + i];
+            string = string.toHex();
+
+            qDebug()<<"Dispositivo: "<<string;
+
+            QString senderIPStr = sender.toString();
+            QString senderPortStr = tr("%1").arg(senderPort);
+            qDebug()<<"Ip: "<<senderIPStr;
+            qDebug()<<"Puerto In: "<<senderPort;
+
+            QString out_port = tr("%1").arg(rx_var[4]);
+            qDebug()<<"Puerto Out: "<<out_port;
+
+
+            qDebug()<<tr("search success");
+        }
     }
     //termina la funcion
 }
