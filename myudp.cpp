@@ -10,6 +10,7 @@ MyUDP::MyUDP(QObject *parent) :
     udpSocket = new QUdpSocket(this);
     quint16 Port = 13536;
     while(udpSocket->bind(QHostAddress::AnyIPv4, Port)==false) Port++;
+
     connect(udpSocket, SIGNAL(readyRead()), this, SLOT(readPending()));
 }
 void MyUDP::ReadData(quint8 Object_id)

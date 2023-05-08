@@ -8,6 +8,7 @@ int main(int argc, char *argv[])
  QCoreApplication a(argc, argv);
     string opcion = argv[2];
     MyUDP client;
+
     //cout<<"hola mundo \n";
     /* printf("esta es la opcion %s : \n",argv[2]);
     if(opcion == "--get_tiempo"){
